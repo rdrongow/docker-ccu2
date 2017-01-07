@@ -12,6 +12,8 @@ CCU2_SERIAL="ccu2_docker"
 #Name of the docker volume where CCU2 data will persist
 DOCKER_CCU2_DATA="ccu2_data"
 
+#Forward this port to ccus listening port 80
+HOST_PORT="80"
 
 
 ##############################################
@@ -115,7 +117,7 @@ echo "Start Docker container"
 cd ${CWD}
 #Remove container if already exits, then start it
 docker ps -a |grep -v $DOCKER_ID && docker rm -f $DOCKER_ID
-docker run --name $DOCKER_ID --net=host -tid -p 80:80 -p 2001:2001 --device=${SERIAL_DEVICE}:/dev/mmd_bidcos -v /sys/devices:/sys/devices -v /sys/class/gpio:/sys/class/gpio -v ${DOCKER_CCU2_DATA}:/usr/local ccu2
+docker run --name $DOCKER_ID --net=bridge -tid -p $HOST_PORT:80 -p 2001:2001 --device=${SERIAL_DEVICE}:/dev/mmd_bidcos -v /sys/devices:/sys/devices -v /sys/class/gpio:/sys/class/gpio -v ${DOCKER_CCU2_DATA}:/usr/local ccu2
 
 echo
 echo "Start ccu2 service"
